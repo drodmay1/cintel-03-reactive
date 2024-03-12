@@ -81,22 +81,27 @@ with ui.card(full_screen=True):
     
     @render_plotly
     def plotly_histogram():
-        return px.histogram(
-            filtered_data(), x=input.selected_attribute(), nbins=input.plotly_bin_count()
-        )
+      return px.histogram(
+      filtered_data(), 
+      x=input.selected_attribute(), 
+      nbins=input.plotly_bin_count(),  # Add a comma here
+      color="species",
+      )     
 
 # Creates a Seaborn Histogram showing all species
 
 with ui.card(full_screen=True):
     ui.card_header("Seaborn Histogram")
 
-    @render.plot(alt="Seaborn Histogram")
-    def seaborn_histogram():
-        histplot = sns.histplot(filtered_data(), x="body_mass_g", bins=input.seaborn_bin_count())
-        histplot.set_title("Palmer Penguins")
-        histplot.set_xlabel("Mass")
-        histplot.set_ylabel("Count")
-        return histplot
+    palette = sns.color_palette("Set3")  # Choose a palette with 3 colors
+
+@render.plot(alt="Seaborn Histogram")
+def seaborn_histogram():
+  histplot = sns.histplot(filtered_data(), x="body_mass_g", bins=input.seaborn_bin_count(), hue="species", palette=palette)
+  histplot.set_title("Palmer Penguins")
+  histplot.set_xlabel("Body Mass (g)")  # Set x-axis label
+  histplot.set_ylabel("Count")  # Set y-axis label
+  return histplot
 
 # Creates a Plotly Scatterplot showing all species
 
@@ -126,6 +131,7 @@ with ui.card(full_screen=True):
 # The function will be called whenever an input functions used to generate that output changes.
 # Any output that depends on the reactive function (e.g., filtered_data()) will be updated when the data changes.
 
+# Reactive calculation to filter data based on selected species
 @reactive.calc
 def filtered_data():
-    return penguins_df
+  return penguins_df[penguins_df["species"].isin(input.selected_species_list())]
