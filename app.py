@@ -42,6 +42,15 @@ with ui.sidebar(open="open"):
         inline=True,
     )
 
+    # Creates a checkbox group input for islands
+    ui.input_checkbox_group(
+        "selected_island_list",
+        "Islands",
+        penguins_df["island"].unique().tolist(),
+        selected=penguins_df["island"].unique().tolist(),
+        inline=True,
+    )
+
     # Adds a hyperlink to GitHub Repo
     ui.a(
         "GitHub",
@@ -106,7 +115,7 @@ def seaborn_histogram():
 # Creates a Plotly Scatterplot showing all species
 
 with ui.card(full_screen=True):
-    ui.card_header("Plotly Scatterplot: Species")
+    ui.card_header("Plotly Scatterplot: Species and islands")
 
     @render_plotly
     def plotly_scatterplot():
@@ -114,12 +123,13 @@ with ui.card(full_screen=True):
             x="bill_length_mm",
             y="body_mass_g",
             color="species",
+            facet_col="island",  # Add facet_col parameter to separate scatterplots by island
             title="Penguins Plot",
             labels={
                 "bill_length_mm": "Bill Length (mm)",
                 "body_mass_g": "Body Mass (g)",
             },
-            size_max=8, 
+            size_max=8,  
         )
 
 # --------------------------------------------------------
@@ -131,7 +141,10 @@ with ui.card(full_screen=True):
 # The function will be called whenever an input functions used to generate that output changes.
 # Any output that depends on the reactive function (e.g., filtered_data()) will be updated when the data changes.
 
-# Reactive calculation to filter data based on selected species
+# Reactive calculation to filter data based on selected species and islands
 @reactive.calc
 def filtered_data():
-  return penguins_df[penguins_df["species"].isin(input.selected_species_list())]
+    return penguins_df[
+        (penguins_df["species"].isin(input.selected_species_list())) &
+        (penguins_df["island"].isin(input.selected_island_list()))
+    ]
