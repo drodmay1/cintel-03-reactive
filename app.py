@@ -15,7 +15,6 @@ ui.page_opts(title="DavidRm Penguin", fillable=True)
 
 # creates sidebar for user interaction
 with ui.sidebar(open="open"):
-    
     ui.h2("Sidebar")
     
     # Creates a dropdown input to choose a column 
@@ -67,7 +66,7 @@ with ui.layout_columns():
 
     @render.data_frame
     def render_penguins_table():
-        return filtered_data()
+        return render.DataTable(filtered_data())
 
 # Creates a DataGrid showing all data
 
@@ -76,9 +75,9 @@ with ui.layout_columns():
        ui.h2("Penguins DataGrid")
 
 
-@render.data_frame
-def penguins_data():
-    return render.DataGrid(filtered_data(), row_selection_mode="multiple") 
+    @render.data_frame
+    def penguins_data():
+        return render.DataGrid(filtered_data(), row_selection_mode="multiple") 
 
 # Creates a Plotly Histogram showing all species
 
