@@ -1,3 +1,4 @@
+
 import plotly.express as px
 from shiny.express import input, ui
 from shinywidgets import render_plotly
@@ -28,7 +29,7 @@ with ui.sidebar(open="open"):
     ui.input_numeric("plotly_bin_count", "Number of Plotly bins", 30)
     
     # Creates a slider input for the number of Seaborn bins
-    ui.input_slider("seaborn_bin_count", "Number of Seaborn bins", 1, 100, 20)
+    ui.input_slider("seaborn_bin_count", "Number of Seaborn bins", 1, 40, 20)
 
     # Adds a horizontal rule to the sidebar
     ui.hr()
@@ -60,11 +61,9 @@ with ui.sidebar(open="open"):
 
 # Creates a DataTable showing all data
 
-with ui.layout_columns(col_widths=(4, 8)):        
-    with ui.card():
-        "DataTable"
-
-    ui.h2("Penguins Table")
+with ui.layout_columns():        
+    with ui.card(full_screen=True):
+        ui.h2("Penguins DataTable")
 
     @render.data_frame
     def render_penguins_table():
@@ -72,11 +71,9 @@ with ui.layout_columns(col_widths=(4, 8)):
 
 # Creates a DataGrid showing all data
 
-with ui.layout_columns(col_widths=(4, 8)):        
-    with ui.card():
-        "DataGrid"
-
-    ui.h2("Penguins DataGrid")
+with ui.layout_columns():        
+    with ui.card(full_screen=True):
+       ui.h2("Penguins DataGrid")
 
 
 @render.data_frame
@@ -93,7 +90,7 @@ with ui.card(full_screen=True):
       return px.histogram(
       filtered_data(), 
       x=input.selected_attribute(), 
-      nbins=input.plotly_bin_count(),  # Add a comma here
+      nbins=input.plotly_bin_count(),
       color="species",
       )     
 
