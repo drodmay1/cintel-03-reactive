@@ -1,4 +1,3 @@
-
 import plotly.express as px
 from shiny.express import input, ui
 from shinywidgets import render_plotly
@@ -64,20 +63,17 @@ with ui.layout_columns():
     with ui.card(full_screen=True):
         ui.h2("Penguins DataTable")
 
-    @render.data_frame
-    def render_penguins_table():
-        return render.DataTable(filtered_data())
+        @render.data_frame
+        def render_penguins_table():
+            return render.DataTable(filtered_data())
 
-# Creates a DataGrid showing all data
-
-with ui.layout_columns():        
+# Creates a DataGrid showing all data      
     with ui.card(full_screen=True):
-       ui.h2("Penguins DataGrid")
+        ui.h2("Penguins DataGrid")
 
-
-    @render.data_frame
-    def penguins_data():
-        return render.DataGrid(filtered_data(), row_selection_mode="multiple") 
+        @render.data_frame
+        def penguins_datagrid():
+            return render.DataGrid(filtered_data()) 
 
 # Creates a Plotly Histogram showing all species
 
@@ -100,15 +96,15 @@ with ui.card(full_screen=True):
 
     palette = sns.color_palette("Set3")  # Choose a palette with 3 colors
 
-@render.plot(alt="Seaborn Histogram")
-def seaborn_histogram():
-  histplot = sns.histplot(filtered_data(), x="body_mass_g", bins=input.seaborn_bin_count(), hue="species", palette=palette)
-  histplot.set_title("Palmer Penguins")
-  histplot.set_xlabel("Body Mass (g)")  # Set x-axis label
-  histplot.set_ylabel("Count")  # Set y-axis label
-  return histplot
+    @render.plot(alt="Seaborn Histogram")
+    def seaborn_histogram():
+          histplot = sns.histplot(filtered_data(), x="body_mass_g", bins=input.seaborn_bin_count(), hue="species", palette=palette)
+          histplot.set_title("Palmer Penguins")
+          histplot.set_xlabel("Body Mass (g)")  # Set x-axis label
+          histplot.set_ylabel("Count")  # Set y-axis label
+          return histplot
 
-# Creates a Plotly Scatterplot showing all species
+# Creates a Plotly Scatterplot showing all species and islands
 
 with ui.card(full_screen=True):
     ui.card_header("Plotly Scatterplot: Species and islands")
@@ -124,9 +120,26 @@ with ui.card(full_screen=True):
             labels={
                 "bill_length_mm": "Bill Length (mm)",
                 "body_mass_g": "Body Mass (g)",
-            },
-            size_max=8,  
+            }, 
         )
+
+# Creates a Plotly Boxplot showing all species and islands
+with ui.card(full_screen=True):
+    ui.card_header("Plotly Boxplot: Species")
+
+    @render_plotly
+    def plotly_boxplot():
+        return px.box(filtered_data(),
+            x="species",
+            y=input.selected_attribute(),
+            color="island", #Add a color parameter to differentiate boxplots by island
+            title="Penguins Boxplot",
+            labels={
+                "species": "Species",
+                input.selected_attribute(): input.selected_attribute().replace("_", " ").title(),
+            },
+        )
+        
 
 # --------------------------------------------------------
 # Reactive calculations and effects
