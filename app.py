@@ -14,7 +14,7 @@ ui.page_opts(title="DavidRm Penguin", fillable=True)
 
 # creates sidebar for user interaction
 with ui.sidebar(open="open"):
-    ui.h2("Sidebar")
+    ui.h5("Sidebar")
     
     # Creates a dropdown input to choose a column 
     ui.input_selectize(
@@ -61,7 +61,8 @@ with ui.sidebar(open="open"):
 
 with ui.layout_columns():        
     with ui.card(full_screen=True):
-        ui.h2("Penguins DataTable")
+        ui.h6("Penguins DataTable")
+        
 
         @render.data_frame
         def render_penguins_table():
@@ -69,7 +70,7 @@ with ui.layout_columns():
 
 # Creates a DataGrid showing all data      
     with ui.card(full_screen=True):
-        ui.h2("Penguins DataGrid")
+        ui.h6("Penguins DataGrid")
 
         @render.data_frame
         def penguins_datagrid():
@@ -77,27 +78,27 @@ with ui.layout_columns():
 
 # Creates a Plotly Histogram showing all species
 
-with ui.card(full_screen=True):
-    ui.card_header("Plotly Histogram")
+    with ui.card(full_screen=True):
+        ui.card_header("Plotly Histogram")
     
-    @render_plotly
-    def plotly_histogram():
-      return px.histogram(
-      filtered_data(), 
-      x=input.selected_attribute(), 
-      nbins=input.plotly_bin_count(),
-      color="species",
-      )     
+        @render_plotly
+        def plotly_histogram():
+          return px.histogram(
+          filtered_data(), 
+          x=input.selected_attribute(), 
+          nbins=input.plotly_bin_count(),
+          color="species",
+          )     
 
 # Creates a Seaborn Histogram showing all species
 
-with ui.card(full_screen=True):
-    ui.card_header("Seaborn Histogram")
+    with ui.card(full_screen=True):
+        ui.card_header("Seaborn Histogram")
 
-    palette = sns.color_palette("Set3")  # Choose a palette with 3 colors
+        palette = sns.color_palette("Set3")  # Choose a palette with 3 colors
 
-    @render.plot(alt="Seaborn Histogram")
-    def seaborn_histogram():
+        @render.plot(alt="Seaborn Histogram")
+        def seaborn_histogram():
           histplot = sns.histplot(filtered_data(), x="body_mass_g", bins=input.seaborn_bin_count(), hue="species", palette=palette)
           histplot.set_title("Palmer Penguins")
           histplot.set_xlabel("Body Mass (g)")  # Set x-axis label
@@ -106,39 +107,39 @@ with ui.card(full_screen=True):
 
 # Creates a Plotly Scatterplot showing all species and islands
 
-with ui.card(full_screen=True):
-    ui.card_header("Plotly Scatterplot: Species and islands")
+    with ui.card(full_screen=True):
+        ui.card_header("Plotly Scatterplot: Species and islands")
 
-    @render_plotly
-    def plotly_scatterplot():
-        return px.scatter(filtered_data(),
-            x="bill_length_mm",
-            y="body_mass_g",
-            color="species",
-            facet_col="island",  # Add facet_col parameter to separate scatterplots by island
-            title="Penguins Plot",
-            labels={
+        @render_plotly
+        def plotly_scatterplot():
+            return px.scatter(filtered_data(),
+                x="bill_length_mm",
+                y="body_mass_g",
+                color="species",
+                facet_col="island",  # Add facet_col parameter to separate scatterplots by island
+                title="Penguins Plot",
+                labels={
                 "bill_length_mm": "Bill Length (mm)",
                 "body_mass_g": "Body Mass (g)",
             }, 
         )
 
 # Creates a Plotly Boxplot showing all species and islands
-with ui.card(full_screen=True):
-    ui.card_header("Plotly Boxplot: Species")
+    with ui.card(full_screen=True):
+        ui.card_header("Plotly Boxplot: Species")
 
-    @render_plotly
-    def plotly_boxplot():
-        return px.box(filtered_data(),
-            x="species",
-            y=input.selected_attribute(),
-            color="island", #Add a color parameter to differentiate boxplots by island
-            title="Penguins Boxplot",
-            labels={
-                "species": "Species",
-                input.selected_attribute(): input.selected_attribute().replace("_", " ").title(),
-            },
-        )
+        @render_plotly
+        def plotly_boxplot():
+            return px.box(filtered_data(),
+                x="species",
+                y=input.selected_attribute(),
+                color="island", #Add a color parameter to differentiate boxplots by island
+                title="Penguins Boxplot",
+                labels={
+                    "species": "Species",
+                    input.selected_attribute(): input.selected_attribute().replace("_", " ").title(),
+                },
+            )
         
 
 # --------------------------------------------------------
